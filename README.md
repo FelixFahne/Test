@@ -12,6 +12,24 @@ Features exacted from the annotated datasets can be found in feature_label.csv.
 
 Python script data/explore_data.py provides an example of interfacing with the data.
 
+### Installation
+
+Install the required Python packages:
+
+```
+pip install -r requirements.txt
+```
+
+The main scripts and notebooks rely on the following packages:
+- pandas
+- numpy
+- scikit-learn
+- matplotlib
+- seaborn
+- openpyxl
+- python-docx
+- tensorflow
+
 
 ### Dataset
 
