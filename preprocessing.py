@@ -1,34 +1,78 @@
+"""Utility script for converting Excel annotation files to CSV.
+
+The original version of this script hard-coded absolute file paths.  It now
+accepts an input directory containing Excel files and an output directory for
+the converted CSV files.  Each Excel file found in the input directory will be
+converted to a CSV file with the same base name in the output directory.
+
+Example usage::
+
+    python preprocessing.py --input-dir "SLDEA Data" --output-dir csv_output
+
+"""
+
+import argparse
+import os
 import pandas as pd
 from sklearn.metrics import confusion_matrix
 import seaborn as sns
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 from sklearn.metrics import roc_curve, auc
 from sklearn.metrics import precision_recall_curve
 from sklearn.metrics import average_precision_score
 
-# Define your Excel file paths
-excel_files = [
-    '/Users/gaowei/Downloads_annotations(1).xlsx',
-    '/Users/gaowei/Downloads_annotations(2).xlsx',
-    '/Users/gaowei/Downloads_annotations.xlsx'
-]
 
-# Define corresponding CSV file paths
-csv_files = [
-    '/Users/gaowei/Downloads_annotations(1).csv',
-    '/Users/gaowei/Downloads_annotations(2).csv',
-    '/Users/gaowei/Downloads_annotations.csv'
-]
+def convert_excels_to_csv(input_dir: str, output_dir: str):
+    """Convert all Excel files in *input_dir* to CSV files in *output_dir*."""
 
-# Loop through each Excel file, read it, and save it as a CSV file
-for excel_path, csv_path in zip(excel_files, csv_files):
-    # Read the Excel file
-    df = pd.read_excel(excel_path)
-    
-    # Save the DataFrame to a CSV file
-    df.to_csv(csv_path, index=False)  # Set index=False to avoid saving the DataFrame index as a separate column
+    os.makedirs(output_dir, exist_ok=True)
 
-print("All files have been converted to CSV format.")
+    excel_files = [
+        f for f in os.listdir(input_dir) if f.lower().endswith((".xlsx", ".xls"))
+    ]
+
+    csv_files = []
+    for excel_filename in excel_files:
+        excel_path = os.path.join(input_dir, excel_filename)
+        csv_filename = os.path.splitext(excel_filename)[0] + ".csv"
+        csv_path = os.path.join(output_dir, csv_filename)
+
+        df = pd.read_excel(excel_path)
+        df.to_csv(csv_path, index=False)
+        csv_files.append(csv_path)
+
+    print("All files have been converted to CSV format.")
+    return csv_files
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Convert Excel files to CSV")
+    parser.add_argument(
+        "--input-dir",
+        default="SLDEA Data",
+        help="Directory containing the Excel annotation files",
+    )
+    parser.add_argument(
+        "--output-dir",
+        default="csv_output",
+        help="Directory where converted CSV files will be placed",
+    )
+    return parser.parse_args()
+
+
+args = parse_args()
+csv_files = convert_excels_to_csv(args.input_dir, args.output_dir)
+
+# Load one of the generated CSVs if available so subsequent analysis does not
+# fail. Replace or extend this step with your own data loading logic.
+if csv_files:
+    df = pd.read_csv(csv_files[0])
+else:
+    df = pd.DataFrame()
+
+# Placeholder DataFrame. Replace this with your own summarised data structure
+# that aggregates label counts for each dialogue segment.
+summary_label_counts_by_segment = pd.DataFrame()
 
 
 def assign_tone(row):
