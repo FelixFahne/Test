@@ -1,5 +1,6 @@
 let selectedColor = '';
 let selectedLabelName = '';
+let dialogues = [];
 const labelColors = {
     'reference word': '#ffadad',
     'noun & verb collocation in proper form': '#ffd6a5',
@@ -116,22 +117,46 @@ function highlightSelection(color) {
 document.getElementById('file-input').addEventListener('change', function(event) {
     const file = event.target.files[0];
     const reader = new FileReader();
-    reader.onload = function(e) {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, {
-            type: 'array',
-            cellDates: true,
-            cellNF: false,
-            cellText: false
-        });
-        const firstSheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[firstSheetName];
-        dialogues = XLSX.utils.sheet_to_json(worksheet, {
-            raw: false,
-            dateNF: "HH:mm:ss"
-        });
-    };
-    reader.readAsArrayBuffer(file);
+
+    if (file.name.toLowerCase().endsWith('.json')) {
+        reader.onload = function(e) {
+            try {
+                const jsonData = JSON.parse(e.target.result);
+                dialogues = [];
+                jsonData.forEach(conv => {
+                    if (Array.isArray(conv.messages)) {
+                        conv.messages.forEach(msg => {
+                            dialogues.push({
+                                Speaker: msg.role || '',
+                                Content: msg.content || ''
+                            });
+                        });
+                    }
+                });
+            } catch (err) {
+                alert('Invalid JSON file');
+                dialogues = [];
+            }
+        };
+        reader.readAsText(file);
+    } else {
+        reader.onload = function(e) {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, {
+                type: 'array',
+                cellDates: true,
+                cellNF: false,
+                cellText: false
+            });
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[firstSheetName];
+            dialogues = XLSX.utils.sheet_to_json(worksheet, {
+                raw: false,
+                dateNF: 'HH:mm:ss'
+            });
+        };
+        reader.readAsArrayBuffer(file);
+    }
 });
 
 document.getElementById('confirm-button').addEventListener('click', function() {

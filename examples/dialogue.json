@@ -1,0 +1,9 @@
+[
+  {
+    "id": "sample",
+    "messages": [
+      {"role": "user", "content": "Bonjour"},
+      {"role": "bot", "content": "Salut!"}
+    ]
+  }
+]

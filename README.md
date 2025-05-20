@@ -42,4 +42,15 @@ Python script data/explore_data.py provides an example of interfacing with the d
 - `reports/` - Generated analysis for Arvix paper
 
 
+### Annotation Tool
+
+The repository includes a small web based annotation tool for tagging
+dialogue data.  Open `Annotation_tool.html` in your browser and upload
+either an Excel sheet (`.xlsx`/`.xls`) **or a JSON file** with dialogue
+entries.  JSON files should contain a list of sessions where each session
+has a `messages` array with `role` and `content` fields (see
+`examples/dialogue.json`).  After annotating, click **Download** to save
+your work as an Excel file.
+
+
 
