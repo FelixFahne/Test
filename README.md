@@ -1,75 +1,42 @@
 # 2024InteractiveMetrics
 
-SLEDA is a three-level framework for evaluating dialogue quality and dialogue annotations for English Second Language (ESL)conversation dialogue.
+This repository contains code and sample data for experimenting with the SLEDA framework. SLEDA is a three level approach for analysing English Second Language (ESL) dialogues.
 
-It was created for the SLEDA project:
+The repository currently provides a lightweight setup with a few core tools and example notebooks. It does not include the larger directory layout described in older versions of the README.
 
-For more details, please read: Interaction Matters: A Three-Level Multi-class English Second Language Conversation Dialogue through Interactive Based Metrics
+## Contents
 
-Dialogues labelled for three levels (from the above paper) can be found in SLDEA data.
+- **`SLDEA Data/`** – Excel files with dialogue annotations.
+- **`preprocessing.py`** – converts the Excel files to CSV format.
+- **`Annotation_tool.html` / `script.js`** – a small web app for manual annotation.
+- **`dialogue_pred.ipynb`** – example notebook for training a model.
+- **`ESL_AddedExperinments.ipynb`** – additional experiments.
+- **`2024ACLESLMainCodes_Results/`** – CSV files with example results.
+- **`feature_label.csv`** – features extracted from the annotated data.
 
-Features exacted from the annotated datasets can be found in feature_label.csv. 
+## Installation
 
-Python script data/explore_data.py provides an example of interfacing with the data.
+Install the required packages with pip:
 
-### Installation
-
-Install the required Python packages:
-
-```
+```bash
 pip install -r requirements.txt
 ```
 
-The main scripts and notebooks rely on the following packages:
-- pandas
-- numpy
-- scikit-learn
-- matplotlib
-- seaborn
-- openpyxl
-- python-docx
-- tensorflow
+## Basic Workflow
 
+1. **Convert the Excel data**
+   ```bash
+   python preprocessing.py --input-dir "SLDEA Data" --output-dir csv_output
+   ```
+   This will create a `csv_output` folder with the converted CSV files.
 
-### Dataset
+2. **Annotate**
+   Open `Annotation_tool.html` in your browser. You can load CSV files and apply labels using the interface.
 
-- `dataset/SLDEA` - Sample Dataset: Full Access Contact Via: rena.gao@unimelb.edu.au
-- Dataset Viewing
-- To run the notebooks for examining the datasets, please follow the procedures listed below:
+3. **Train a model**
+   Use `dialogue_pred.ipynb` (or `ESL_AddedExperinments.ipynb`) in Jupyter Notebook. Load the CSV files created in step 1 and follow the cells to train a simple model.
 
-- Download the dataset from the folder.
-- Put the data into dataset/SLDEA and extract sample.zip.
-- To view the data, one may use preprocessing.ipynb for viewing the examples.
+4. **Evaluate**
+   After training, you can run evaluation steps in the notebook or compare results with the CSVs inside `2024ACLESLMainCodes_Results`.
 
-### Notebooks
-
-- `notebooks/a.ipynb` - Notebook for preprocessing
-- `notebooks/b.ipynb` - Notebook for main experiments
-- `notebooks/c.ipync` - Notebook for added experiments 
-
-### Figures
-
-- `figures/` - Contains all figures used for this project
-
-### Utils
-
-- `utils/` - Contains all utility functions for this project
-
-### Reports
-
-- `reports/` - Generated analysis for Arvix paper
-
-### Command Line Tools
-
-The repository includes a small script to convert the Excel annotation files
-into CSVs.  By default it looks for Excel files in `SLDEA Data` and writes the
-converted CSV files to `csv_output`.  You can adjust these locations with
-command line arguments:
-
-```bash
-python preprocessing.py --input-dir "SLDEA Data" --output-dir csv_output
-```
-
-
-
-
+This simplified workflow should help you get started even if you are new to Python. The larger directory structure mentioned in earlier READMEs (e.g. `dataset/SLDEA`, `notebooks/`, `figures/`, `utils/`, `reports/`) is not present in this repository.
