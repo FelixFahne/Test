@@ -1,6 +1,5 @@
 ---
 title: SLEDA Tools
-emoji: \U0001F4D1
 colorFrom: blue
 colorTo: green
 sdk: gradio
@@ -67,3 +66,21 @@ python app.py
 ```
 
 The interface will open in your browser. On Hugging Face Spaces you can add all repository files and set `app.py` as the entry point.
+
+## Step-by-Step Guide
+
+If you are new to Python, follow these steps to run each tool in order:
+
+1. **Install Python** – Download and install Python 3.8 or newer from [python.org](https://www.python.org/).
+2. **Install dependencies** – Open a terminal in this repository and run:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. **Preprocess the data** – Convert the Excel files by executing:
+   ```bash
+   python preprocessing.py --input-dir "SLDEA Data" --output-dir csv_output
+   ```
+   The converted CSV files will appear inside the `csv_output` folder.
+4. **Annotate dialogues** – Double click `Annotation_tool.html`. Your browser will open the annotation interface. Load a CSV file, apply labels, and save your work.
+5. **Train a model** – Open either `dialogue_pred.ipynb` or `ESL_AddedExperinments.ipynb` in Jupyter Notebook and run the cells one by one using the annotated CSV files from the previous step. A model file will be generated.
+6. **Evaluate a corpus** – Use the evaluation tab in `app.py` or the final notebook cells to load the saved model together with new CSV data. Accuracy numbers will be printed.
