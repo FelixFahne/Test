@@ -116,22 +116,49 @@ function highlightSelection(color) {
 document.getElementById('file-input').addEventListener('change', function(event) {
     const file = event.target.files[0];
     const reader = new FileReader();
+
     reader.onload = function(e) {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, {
-            type: 'array',
-            cellDates: true,
-            cellNF: false,
-            cellText: false
-        });
-        const firstSheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[firstSheetName];
-        dialogues = XLSX.utils.sheet_to_json(worksheet, {
-            raw: false,
-            dateNF: "HH:mm:ss"
-        });
+        const fileName = file.name.toLowerCase();
+
+        if (fileName.endsWith('.json')) {
+            // Parse JSON file and convert it to the expected dialogue format
+            const jsonData = JSON.parse(e.target.result);
+            dialogues = [];
+            jsonData.forEach(conv => {
+                if (Array.isArray(conv.messages)) {
+                    conv.messages.forEach(msg => {
+                        dialogues.push({
+                            'Speaker': msg.role,
+                            'Content': msg.content
+                        });
+                    });
+                }
+            });
+        } else {
+            // Assume Excel/CSV file and process with SheetJS
+            const data = fileName.endsWith('.csv') ? e.target.result : new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, {
+                type: fileName.endsWith('.csv') ? 'binary' : 'array',
+                cellDates: true,
+                cellNF: false,
+                cellText: false
+            });
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[firstSheetName];
+            dialogues = XLSX.utils.sheet_to_json(worksheet, {
+                raw: false,
+                dateNF: 'HH:mm:ss'
+            });
+        }
     };
-    reader.readAsArrayBuffer(file);
+
+    if (file.name.toLowerCase().endsWith('.json')) {
+        reader.readAsText(file);
+    } else if (file.name.toLowerCase().endsWith('.csv')) {
+        reader.readAsBinaryString(file);
+    } else {
+        reader.readAsArrayBuffer(file);
+    }
 });
 
 document.getElementById('confirm-button').addEventListener('click', function() {
