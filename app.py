@@ -1,6 +1,7 @@
 import tempfile
 import joblib
 import gradio as gr
+from gradio.themes.base import Base
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
@@ -19,10 +20,19 @@ annotation_html = annotation_html.replace(
 
 
 def preprocess_excel(file):
-    """Convert an uploaded Excel file to CSV and return the path."""
+    """Convert an uploaded Excel or CSV file to CSV and return the path."""
     if file is None:
-        raise gr.Error("Please upload an Excel file")
-    df = pd.read_excel(file.name, engine="openpyxl")
+        raise gr.Error("Please upload an Excel or CSV file")
+
+    filename = file.name.lower()
+    try:
+        if filename.endswith(".csv"):
+            df = pd.read_csv(file.name)
+        else:
+            df = pd.read_excel(file.name, engine="openpyxl")
+    except Exception as e:
+        raise gr.Error(f"Failed to read file: {e}")
+
     tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".csv")
     df.to_csv(tmp.name, index=False)
     return tmp.name
@@ -64,7 +74,7 @@ def evaluate_model(model_file, csv_file):
     return acc
 
 
-demo = gr.Blocks()
+demo = gr.Blocks(theme=Base())
 
 with demo:
     gr.Markdown("# SLEDA Tools")
@@ -72,7 +82,7 @@ with demo:
         gr.HTML(annotation_html)
 
     with gr.Tab("Preprocessing"):
-        input_excel = gr.File(label="Excel file")
+        input_excel = gr.File(label="Excel or CSV file")
         convert_btn = gr.Button("Convert to CSV")
         output_csv = gr.File(label="CSV output")
         convert_btn.click(preprocess_excel, inputs=input_excel, outputs=output_csv)
