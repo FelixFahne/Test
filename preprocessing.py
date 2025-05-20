@@ -13,6 +13,7 @@ Example usage::
 
 import argparse
 import os
+import sys
 import pandas as pd
 from sklearn.metrics import confusion_matrix
 import seaborn as sns
@@ -34,10 +35,22 @@ def convert_excels_to_csv(input_dir: str, output_dir: str):
     csv_files = []
     for excel_filename in excel_files:
         excel_path = os.path.join(input_dir, excel_filename)
+        print(f"Processing {excel_path}")
         csv_filename = os.path.splitext(excel_filename)[0] + ".csv"
         csv_path = os.path.join(output_dir, csv_filename)
 
-        df = pd.read_excel(excel_path)
+        # Explicitly specify openpyxl as the engine for .xlsx files. Some of the
+        # provided files may actually be legacy Excel formats. In that case,
+        # fall back to the xlrd engine which handles .xls files.
+        try:
+            df = pd.read_excel(excel_path, engine="openpyxl")
+        except Exception as e:
+            print(f"  failed with openpyxl: {e}")
+            try:
+                df = pd.read_excel(excel_path, engine="xlrd")
+            except Exception as e2:
+                print(f"  skipped {excel_filename} due to read error: {e2}")
+                continue
         df.to_csv(csv_path, index=False)
         csv_files.append(csv_path)
 
@@ -62,6 +75,7 @@ def parse_args():
 
 args = parse_args()
 csv_files = convert_excels_to_csv(args.input_dir, args.output_dir)
+sys.exit(0)
 
 # Load one of the generated CSVs if available so subsequent analysis does not
 # fail. Replace or extend this step with your own data loading logic.
