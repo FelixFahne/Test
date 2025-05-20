@@ -40,3 +40,20 @@ pip install -r requirements.txt
    After training, you can run evaluation steps in the notebook or compare results with the CSVs inside `2024ACLESLMainCodes_Results`.
 
 This simplified workflow should help you get started even if you are new to Python. The larger directory structure mentioned in earlier READMEs (e.g. `dataset/SLDEA`, `notebooks/`, `figures/`, `utils/`, `reports/`) is not present in this repository.
+
+## Running in a Hugging Face Space
+
+You can launch the included `app.py` script on Hugging Face Spaces or locally. It provides a small Gradio interface with four tabs:
+
+1. **Annotation** – shows the existing annotation tool directly in the browser.
+2. **Preprocessing** – upload an Excel file and download the converted CSV.
+3. **Training** – upload a CSV (with a `label` column) to train a simple model. The accuracy and a downloadable model file are returned.
+4. **Evaluation** – upload a trained model file together with a CSV to measure accuracy on that data.
+
+To run the app locally, install the dependencies and execute:
+
+```bash
+python app.py
+```
+
+The interface will open in your browser. On Hugging Face Spaces you can add all repository files and set `app.py` as the entry point.
