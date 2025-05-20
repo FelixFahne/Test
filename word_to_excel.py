@@ -1,5 +1,6 @@
 import os
 import re
+import argparse
 from docx import Document
 import pandas as pd
 
@@ -33,7 +34,7 @@ def process_document_with_id(doc_path):
     # Convert the data to a DataFrame
     return pd.DataFrame(data)
 
-def process_all_documents(input_folder, output_folder):
+def process_all_documents(input_folder: str, output_folder: str) -> None:
     # Ensure output directory exists
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
@@ -48,9 +49,23 @@ def process_all_documents(input_folder, output_folder):
             output_file = os.path.join(output_folder, filename.replace('.docx', '.xlsx'))
             df.to_excel(output_file, index=False)
 
-# Define input and output folders
-input_folder = 'Input'  # Replace with your actual input folder path
-output_folder = 'Output'  # Replace with your actual output folder path
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Convert Word transcripts to Excel with dialogue IDs"
+    )
+    parser.add_argument(
+        "--input-dir",
+        default="Input",
+        help="Directory containing the Word files",
+    )
+    parser.add_argument(
+        "--output-dir",
+        default="Output",
+        help="Directory where the Excel files will be saved",
+    )
+    return parser.parse_args()
 
-# Process all Word documents in the input folder
-process_all_documents(input_folder, output_folder)
+
+if __name__ == "__main__":
+    args = parse_args()
+    process_all_documents(args.input_dir, args.output_dir)
