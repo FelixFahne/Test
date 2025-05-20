@@ -56,7 +56,7 @@ This simplified workflow should help you get started even if you are new to Pyth
 You can launch the included `app.py` script on Hugging Face Spaces or locally. It provides a small Gradio interface with four tabs:
 
 1. **Annotation** – shows the existing annotation tool directly in the browser.
-2. **Preprocessing** – upload an Excel file and download the converted CSV.
+2. **Preprocessing** – upload an Excel **or** CSV file and download the converted CSV.
 3. **Training** – upload a CSV (with a `label` column) to train a simple model. The accuracy and a downloadable model file are returned.
 4. **Evaluation** – upload a trained model file together with a CSV to measure accuracy on that data.
 
