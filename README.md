@@ -1,3 +1,13 @@
+---
+title: SLEDA Tools
+emoji: \U0001F4D1
+colorFrom: blue
+colorTo: green
+sdk: gradio
+sdk_version: "5.30.0"
+app_file: app.py
+pinned: false
+---
 # 2024InteractiveMetrics
 
 This repository contains code and sample data for experimenting with the SLEDA framework. SLEDA is a three level approach for analysing English Second Language (ESL) dialogues.
