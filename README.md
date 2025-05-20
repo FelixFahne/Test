@@ -59,5 +59,17 @@ The main scripts and notebooks rely on the following packages:
 
 - `reports/` - Generated analysis for Arvix paper
 
+### Command Line Tools
+
+The repository includes a small script to convert the Excel annotation files
+into CSVs.  By default it looks for Excel files in `SLDEA Data` and writes the
+converted CSV files to `csv_output`.  You can adjust these locations with
+command line arguments:
+
+```bash
+python preprocessing.py --input-dir "SLDEA Data" --output-dir csv_output
+```
+
+
 
 
